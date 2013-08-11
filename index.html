@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Superuser : su install" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Superuser</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/tommythomasdylst/Superuser">View on GitHub</a>
+
+          <h1 id="project_title">Superuser</h1>
+          <h2 id="project_tagline">su install</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/tommythomasdylst/Superuser/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/tommythomasdylst/Superuser/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="why-another-superuser" class="anchor" href="#why-another-superuser"><span class="octicon octicon-link"></span></a>Why another Superuser?</h2>
+
+<ul>
+<li>Superuser should be open source. It's the gateway to root on your device. It must be open for independent security analysis. Obscurity (closed source) is not security.</li>
+<li>Superuser should be NDK buildable. No internal Android references.</li>
+<li>Superuser should also be AOSP buildable for those that want to embed it in their ROM.</li>
+<li>Superuser should also be AOSP <em>embeddable</em>, meaning a ROM can easily embed it into their Settings app.</li>
+<li>Maintenance and updates on both the market and source repositories should be timely.</li>
+<li>I want to be able to point users of my app to a Superuser solution that I wrote, that I know works, and that I can fix if something is wrong.</li>
+<li>Handle multiuser (4.2+) properly</li>
+<li>Handle concurrent su requests properly</li>
+</ul><h2>
+<a name="translations" class="anchor" href="#translations"><span class="octicon octicon-link"></span></a>Translations</h2>
+
+<p>Translations are very much appreciated, but please do not submit translations on Github! Instead, use the review submission process on <a href="http://review.cyanogenmod.org/#/q/status:open,n,z">CyanogenMod's gerrit instance</a>.</p>
+
+<h2>
+<a name="checking-out-the-source" class="anchor" href="#checking-out-the-source"><span class="octicon octicon-link"></span></a>Checking out the source</h2>
+
+<p>You'll need the "Widgets" dependency.</p>
+
+<ul>
+<li>$ mkdir /path/to/src</li>
+<li>$ cd /path/to/src</li>
+<li>$ git clone git://github.com/koush/Superuser</li>
+<li>$ git clone git://github.com/koush/Widgets</li>
+</ul><p>These repositories do not keep the actual projects in the top level directory.
+This is because they contain tests, libs, and samples.</p>
+
+<h2>
+<a name="eclipse" class="anchor" href="#eclipse"><span class="octicon octicon-link"></span></a>Eclipse</h2>
+
+<p>In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work (TM).</p>
+
+<h2>
+<a name="ant" class="anchor" href="#ant"><span class="octicon octicon-link"></span></a>Ant</h2>
+
+<ul>
+<li>$ mkdir /path/to/src</li>
+<li>$ cd /path/to/src</li>
+<li>$ cd Superuser/Superuser</li>
+</ul><p>In this directory, create a file called local.properties. This file is used by ant for custom properties. You need to specify the location of the ndk directory:</p>
+
+<pre><code>ndk.dir=/Users/koush/src/android-ndk
+</code></pre>
+
+<p>Then you can build:</p>
+
+<ul>
+<li>$ ant release</li>
+</ul><p>Outputs:</p>
+
+<ul>
+<li>bin/update.zip - Recovery installable zip</li>
+<li>bin/Superuser.apk - Superuser Android app</li>
+<li>libs/armeabi/su - ARM su binary</li>
+<li>libs/x86/su - x86 su binary</li>
+</ul><h2>
+<a name="building-the-su-binary" class="anchor" href="#building-the-su-binary"><span class="octicon octicon-link"></span></a>Building the su binary</h2>
+
+<p>You can use ant as shown above, to build the binary, but it can also be built without building the APK.</p>
+
+<p>Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.</p>
+
+<ul>
+<li>$ cd /path/to/src/</li>
+<li>$ cd Superuser/Superuser</li>
+<li>$ ndk-build</li>
+</ul><p>The su binary will built into Superuser/Superuser/libs/armeabi/su.</p>
+
+<h2>
+<a name="building-with-aosp-cyanogenmod-etc" class="anchor" href="#building-with-aosp-cyanogenmod-etc"><span class="octicon octicon-link"></span></a>Building with AOSP, CyanogenMod, etc</h2>
+
+<p>ROM developers are welcome to distribute the official Superuser APK and binary that I publish. That will
+allow them to receive updates with Google Play. However, you can also build Superuser as part of your
+build, if you choose to.</p>
+
+<p>There are two ways to include Superuser in your build. The easiest is to build the APK as a separate app.
+To do that, simply add the local_manifest.xml as described below. The second way is by embedding it
+into the native Android System Settings.</p>
+
+<h4>
+<a name="repo-setup" class="anchor" href="#repo-setup"><span class="octicon octicon-link"></span></a>Repo Setup</h4>
+
+<p>Add the <a href="https://github.com/koush/Superuser/blob/master/local_manifest.xml">local_manifest.xml</a> to your .repo/local_manifests</p>
+
+<h4>
+<a name="configuring-the-package-name" class="anchor" href="#configuring-the-package-name"><span class="octicon octicon-link"></span></a>Configuring the Package Name</h4>
+
+<p>The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser.
+To prevent conflicts with the Play store version, the build process changes the package
+name to com.thirdparty.superuser. You can configure this value by setting the following
+in your vendor makefile or BoardConfig:</p>
+
+<pre><code>SUPERUSER_PACKAGE := com.mypackagename.superuser
+</code></pre>
+
+<h4>
+<a name="advanced---embedding-superuser-into-system-settings" class="anchor" href="#advanced---embedding-superuser-into-system-settings"><span class="octicon octicon-link"></span></a>Advanced - Embedding Superuser into System Settings</h4>
+
+<p>You will not need to change the package name as described above. Superuser will simply go
+into the com.android.settings package.</p>
+
+<p>First, in a product makefile (like vendor/cm/config/common.mk), specify the following:</p>
+
+<pre><code>SUPERUSER_EMBEDDED := true
+</code></pre>
+
+<p>To modify packages/apps/Settings, you will need this <a href="http://review.cyanogenmod.org/#/c/32957/2//COMMIT_MSG,unified">patch</a>.
+The patch simply references the sources checked out to external/koush and makes changes
+to XML preference files and the AndroidManifest.xml. It is a very minimal change.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Superuser maintained by <a href="https://github.com/tommythomasdylst">tommythomasdylst</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
